@@ -1,6 +1,6 @@
 count_increased = 0
 
-with open("data_day_1.txt") as f:
+with open("data_day1.txt") as f:
     last_depth = int(f.readline())
     for l in f:
         new_depth = int(l)
@@ -13,7 +13,7 @@ print(count_increased)
 
 count_increased = 0
 
-with open("data_day_1.txt") as f:
+with open("data_day1.txt") as f:
     current_window = 0
     lines = f.readlines()
     last_depth = 0
