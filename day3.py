@@ -25,54 +25,34 @@ with open("data_day3.txt") as f:
 # Day 3, Task 2                                                               #
 ###############################################################################
 
+def find_rating(lines: list[str], keep_on_more_1: str, keep_on_less_1: str) -> int:
+    lines = lines.copy()
+
+    current_position = 0
+    while len(lines) > 1:
+        count1 = 0
+        for i in lines:
+            if i[current_position] == "1":
+                count1 += 1
+
+        keep = ""
+        if count1 >= len(lines) / 2:
+            keep = keep_on_more_1
+        else:
+            keep = keep_on_less_1
+
+        lines = [i for i in lines if i[current_position] == keep]
+
+        current_position += 1
+
+    return int(lines[0], 2)
+
+
 with open("data_day3.txt") as f:
-    lines1 = f.readlines()
-    lines2 = lines1.copy()
+    lines = f.readlines()
 
-    current_position = 0
-    while len(lines1) > 1:
-        count1 = 0
-        for i in lines1:
-            if i[current_position] == "1":
-                count1 += 1
+    val1 = find_rating(lines, "1", "0")
+    val2 = find_rating(lines, "0", "1")
 
-        if count1 >= len(lines1) / 2:
-            destroy = "0"
-        else:
-            destroy = "1"
-
-        i = 0
-        while i < len(lines1):
-            if lines1[i][current_position] == destroy:
-                lines1.remove(lines1[i])
-                i -= 1
-
-            i += 1
-
-        current_position += 1
-
-    current_position = 0
-    while len(lines2) > 1:
-        count1 = 0
-        for i in lines2:
-            if i[current_position] == "1":
-                count1 += 1
-
-        if count1 >= len(lines2) / 2:
-            destroy = "1"
-        else:
-            destroy = "0"
-
-        i = 0
-        while i < len(lines2):
-            if lines2[i][current_position] == destroy:
-                lines2.remove(lines2[i])
-                i -= 1
-
-            i += 1
- 
-        current_position += 1
-
-
-    print(int(lines1[0], 2) * int(lines2[0], 2))
+    print(val1 * val2)
 
