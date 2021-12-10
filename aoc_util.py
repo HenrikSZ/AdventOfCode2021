@@ -25,7 +25,7 @@ def get_data_set(day: int) -> list[str]:
     data_file_path = f"./data_day{day}.txt"
     if os.path.isfile(data_file_path):
         with open(data_file_path) as data_file:
-            ret = data_file.readlines()
+            ret = data_file.read().split("\n")
     else:
         ret = download_data_set(day)
 
