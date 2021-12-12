@@ -55,16 +55,11 @@ def options_from(paths, visited, double, curr_node):
 
 def task(data_set: list[str]) -> int:
     paths = {}
-    small_caves = []
     for i in data_set:
         [start, end] = i.split("-")
         paths.setdefault(start, []).append(end)
         paths.setdefault(end, []).append(start)
 
-        if start.islower() and start != "start" and start not in small_caves:
-            small_caves.append(start)
-        if end.islower() and end != "end" and end not in small_caves:
-            small_caves.append(end)
 
     return options_from(paths, [], None, "start")
 
