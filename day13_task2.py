@@ -65,10 +65,12 @@ def task(data_set: list[str]) -> int:
         dots = fold(dots, data_set[i])
         i += 1
 
-    min_x = 100000000000000
-    max_x = 0
-    min_y = 100000000000000
-    max_y = 0
+    dot = dots.pop()
+    dots.add(dot)
+    min_x = dot[0]
+    max_x = dot[0]
+    min_y = dot[1]
+    max_y = dot[1]
     for i in dots:
         if i[0] < min_x:
             min_x = i[0]
@@ -80,14 +82,12 @@ def task(data_set: list[str]) -> int:
         elif i[1] > max_y:
             max_y = i[1]
 
-    result = [[" "] * (max_x - min_x + 1) for _ in range(max_y - min_y + 1)]
-
-    for i in dots:
-        result[i[1] - min_y][i[0] - min_x] = "X"
-
-    for row in result:
-        for col in row:
-            print(col, end="")
+    for y in range(min_y, max_y + 1):
+        for x in range(min_x, max_x + 1):
+            if (x, y) in dots:
+                print("#", end="")
+            else:
+                print(" ", end="")
 
         print()
     return 0
