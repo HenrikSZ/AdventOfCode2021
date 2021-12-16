@@ -14,8 +14,8 @@ class BitParser():
         self.string = string
         self.int_bit_count = 0
         self.index = 0
-        self.current_number = int(string[self.index], base=16)
         self.parsed_bits_count = 0
+        self.current_hex = int(string[self.index], base=16)
 
 
     def get_next_n_bits(self, n: int) -> int:
@@ -24,15 +24,15 @@ class BitParser():
             if self.int_bit_count == 4:
                 self.int_bit_count = 0
                 self.index += 1
-                self.current_number = int(self.string[self.index], base=16)
+                self.current_hex = int(self.string[self.index], base=16)
                 
-            significant_bit = self.current_number & 0b1000
+            significant_bit = self.current_hex & 0b1000
             significant_bit >>= 3
 
             acc <<= 1
             acc |= significant_bit
 
-            self.current_number <<= 1
+            self.current_hex <<= 1
             self.int_bit_count += 1
             n -= 1
             self.parsed_bits_count += 1
