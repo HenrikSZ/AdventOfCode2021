@@ -17,23 +17,28 @@ class BitParser():
         self.current_number = int(string[self.index], base=16)
         self.parsed_bits_count = 0
 
+
     def get_next_n_bits(self, n: int) -> int:
-        number = 0
+        acc = 0
         while n > 0:
             if self.int_bit_count == 4:
                 self.int_bit_count = 0
                 self.index += 1
                 self.current_number = int(self.string[self.index], base=16)
-            number <<= 1
+                
             significant_bit = self.current_number & 0b1000
             significant_bit >>= 3
-            number |=  significant_bit
+
+            acc <<= 1
+            acc |= significant_bit
+
             self.current_number <<= 1
             self.int_bit_count += 1
             n -= 1
             self.parsed_bits_count += 1
 
-        return number
+        return acc
+
 
     def get_parsed_bits_count(self) -> int:
         return self.parsed_bits_count
@@ -43,6 +48,7 @@ class Packet():
     def add_version_numbers(self) -> int:
         return 0
     
+
     def evaluate(self) -> int:
         return 0
 
@@ -58,8 +64,10 @@ class LiteralPacket(Packet):
             if (bits & 0b10000) == 0b00000:
                 break
 
+
     def add_version_numbers(self) -> int:
         return self.version
+
 
     def evaluate(self) -> int:
         return self.value
@@ -69,8 +77,9 @@ class OperatorPacket(Packet):
     def __init__(self, version: int, type: int, bit_parser: BitParser):
         self.version = version
         self.type = type
-        self.length_type = bit_parser.get_next_n_bits(1)
         self.packet_list: list[Packet] = []
+
+        self.length_type = bit_parser.get_next_n_bits(1)
         if self.length_type == 1:
             sub_packet_num = bit_parser.get_next_n_bits(11)
             for _ in range(sub_packet_num):
@@ -81,12 +90,14 @@ class OperatorPacket(Packet):
             while bit_parser.get_parsed_bits_count() - pre_parser_count < sub_packet_len:
                 self.packet_list.append(parse_packet(bit_parser))
         
+
     def add_version_numbers(self) -> int:
         acc = self.version
         for packet in self.packet_list:
             acc += packet.add_version_numbers()
 
         return acc
+
 
     def evaluate(self) -> int:
         if self.type == 0:
@@ -102,6 +113,7 @@ class OperatorPacket(Packet):
                 acc *= p.evaluate()
 
             return acc
+
         elif self.type == 2:
             min_val = sys.maxsize
             for p in self.packet_list:
@@ -110,6 +122,7 @@ class OperatorPacket(Packet):
                     min_val = val
 
             return min_val
+
         elif self.type == 3:
             max_val = 0
             for p in self.packet_list:
@@ -118,10 +131,13 @@ class OperatorPacket(Packet):
                     max_val = val
 
             return max_val
+
         elif self.type == 5:
             return 1 if self.packet_list[0].evaluate() > self.packet_list[1].evaluate() else 0
+
         elif self.type == 6:
             return 1 if self.packet_list[0].evaluate() < self.packet_list[1].evaluate() else 0
+
         elif self.type == 7:
             return 1 if self.packet_list[0].evaluate() == self.packet_list[1].evaluate() else 0
 

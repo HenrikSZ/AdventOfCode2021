@@ -17,23 +17,28 @@ class BitParser():
         self.current_number = int(string[self.index], base=16)
         self.parsed_bits_count = 0
 
+
     def get_next_n_bits(self, n: int) -> int:
-        number = 0
+        acc = 0
         while n > 0:
             if self.int_bit_count == 4:
                 self.int_bit_count = 0
                 self.index += 1
                 self.current_number = int(self.string[self.index], base=16)
-            number <<= 1
+                
             significant_bit = self.current_number & 0b1000
             significant_bit >>= 3
-            number |=  significant_bit
+
+            acc <<= 1
+            acc |= significant_bit
+
             self.current_number <<= 1
             self.int_bit_count += 1
             n -= 1
             self.parsed_bits_count += 1
 
-        return number
+        return acc
+
 
     def get_parsed_bits_count(self) -> int:
         return self.parsed_bits_count
@@ -55,6 +60,7 @@ class LiteralPacket(Packet):
             if (bits & 0b10000) == 0b00000:
                 break
 
+
     def add_version_numbers(self) -> int:
         return self.version
 
@@ -74,7 +80,8 @@ class OperatorPacket(Packet):
             pre_parser_count = bit_parser.get_parsed_bits_count()
             while bit_parser.get_parsed_bits_count() - pre_parser_count < sub_packet_len:
                 self.packet_list.append(parse_packet(bit_parser))
-        
+
+    
     def add_version_numbers(self) -> int:
         acc = self.version
         for packet in self.packet_list:
