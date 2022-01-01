@@ -70,7 +70,7 @@ def get_num_lit_pixels(grid):
 
 def task(data_set: list[str]) -> int:
     replacement = data_set[0]
-    num_steps = 2
+    num_steps = 50
 
     old_grid = []
     new_grid = []
