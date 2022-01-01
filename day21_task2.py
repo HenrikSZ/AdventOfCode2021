@@ -31,13 +31,13 @@ def play(n, pos_1, pos_2, score_1, score_2):
     for p in range(3, 10):
         new_pos_1 = (pos_1 + p) % 10
         new_score_1 = score_1 + new_pos_1 + 1
-        
+
         player_2_wins_tmp, player_1_wins_tmp = play(
-        n * dice_roll_to_n[p],
-        pos_2,
-        new_pos_1,
-        score_2,
-        new_score_1
+            n * dice_roll_to_n[p],
+            pos_2,
+            new_pos_1,
+            score_2,
+            new_score_1
         )
 
         player_1_wins += player_1_wins_tmp
