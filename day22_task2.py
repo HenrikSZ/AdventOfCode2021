@@ -3,6 +3,7 @@
 ###############################################################################
 
 from collections import deque
+from __future__ import annotations
 import aoc_util
 
 
@@ -71,7 +72,7 @@ off x=-93533..-4276,y=-16170..68771,z=-104985..-24507"""
 
 class Cuboid:
     def __init__(self, xmin, xmax, ymin, ymax, zmin, zmax):
-        self.coords = [xmin, xmax, ymin, ymax, zmin, zmax]
+        self.coords: list[int] = [xmin, xmax, ymin, ymax, zmin, zmax]
 
     
     def __repr__(self):
@@ -82,13 +83,13 @@ class Cuboid:
         return Cuboid(*self.coords.copy())
 
 
-    def intersects(self, other):
+    def intersects(self, other: Cuboid):
         return self.coords[0] <= other.coords[1] and self.coords[1] >= other.coords[0] \
             and self.coords[2] <= other.coords[3] and self.coords[3] >= other.coords[2] \
             and self.coords[4] <= other.coords[5] and self.coords[5] >= other.coords[4]
 
     
-    def cut_helper(self, other, min_index, new_cuboids):
+    def cut_helper(self, other: Cuboid, min_index: int, new_cuboids: deque):
         if other.coords[min_index] < self.coords[min_index] <= other.coords[min_index + 1]:
             cuboid = other.copy()
             cuboid.coords[min_index + 1] = self.coords[min_index] - 1
@@ -104,7 +105,7 @@ class Cuboid:
             new_cuboids.append(cuboid)        
 
 
-    def cut(self, other, new_cuboids):
+    def cut(self, other: Cuboid, new_cuboids: deque):
         if self.intersects(other):
             other = other.copy()
 
@@ -122,7 +123,7 @@ class Cuboid:
 
 
 def task(data_set: list[str]) -> int:
-    cuboids = deque()
+    cuboids: deque[Cuboid] = deque()
 
     for r in data_set:
         instruction, coords = r.split(" ")
