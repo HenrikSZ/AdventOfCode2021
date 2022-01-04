@@ -2,8 +2,8 @@
 # Day x, Task y                                                               #
 ###############################################################################
 
-from collections import deque
 from __future__ import annotations
+from collections import deque
 import aoc_util
 
 
